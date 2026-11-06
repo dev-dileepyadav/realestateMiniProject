@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tenant__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Tenant who signed this lease. A tenant can have leases for multiple properties.</description>
+    <inlineHelpText>Tenant who signed this lease. A tenant can have leases for multiple properties.</inlineHelpText>
+    <label>Tenant</label>
+    <referenceTo>Tenant__c</referenceTo>
+    <relationshipLabel>Lease Agreements</relationshipLabel>
+    <relationshipName>Tenant_Leases</relationshipName>
+    <required>true</required>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

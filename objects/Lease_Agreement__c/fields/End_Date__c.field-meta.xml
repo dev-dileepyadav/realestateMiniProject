@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>End_Date__c</fullName>
+    <description>Date the lease term ends. Reminder emails are sent one month and one day before this date.</description>
+    <inlineHelpText>Date the lease term ends. Reminder emails are sent one month and one day before this date.</inlineHelpText>
+    <label>End Date</label>
+    <required>true</required>
+    <trackHistory>true</trackHistory>
+    <type>Date</type>
+</CustomField>

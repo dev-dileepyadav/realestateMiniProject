@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reminder_Month_Sent__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Set after the one-month expiry email is sent. Cleared if the end date changes.</description>
+    <inlineHelpText>Set after the one-month expiry email is sent. Cleared if the end date changes.</inlineHelpText>
+    <label>Month Reminder Sent</label>
+    <type>Checkbox</type>
+</CustomField>
