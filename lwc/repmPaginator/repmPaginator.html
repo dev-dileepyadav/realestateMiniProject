@@ -1,0 +1,9 @@
+<template>
+    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
+        <p class="slds-text-body_small">{summary}</p>
+        <div class="slds-button-group" role="group">
+            <lightning-button label="Previous" onclick={handlePrevious} disabled={disablePrevious}></lightning-button>
+            <lightning-button label="Next" onclick={handleNext} disabled={disableNext}></lightning-button>
+        </div>
+    </div>
+</template>

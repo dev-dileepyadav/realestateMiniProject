@@ -1,0 +1,63 @@
+<template>
+    <lightning-card title="Tenants" icon-name="standard:people">
+        <lightning-button slot="actions" label="New Tenant" variant="brand" onclick={handleCreate}></lightning-button>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-m-bottom_small slds-text-body_small">A tenant can rent more than one property.</p>
+            <template if:true={creating}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input data-field="name" label="Name" value={name} required onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input data-field="phone" type="tel" label="Phone Number" value={phone} onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input data-field="email" type="email" label="Email" value={email} onchange={handleChange}></lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-button label="Save Tenant" variant="brand" onclick={handleSave} disabled={saving}></lightning-button>
+                        <lightning-button class="slds-m-left_x-small" label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                </div>
+            </template>
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading tenants" size="small"></lightning-spinner>
+            </template>
+            <template if:true={hasRecords}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Tenants">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone Number</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={records} for:item="row">
+                            <tr key={row.Id}>
+                                <th scope="row">
+                                    <button class="slds-button slds-button_reset" data-id={row.Id} onclick={handleView}>{row.Name}</button>
+                                </th>
+                                <td>{row.Phone_Number__c}</td>
+                                <td>{row.Email__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={hasRecords}>
+                <div class="slds-align_absolute-center slds-m-vertical_large slds-text-color_weak">No tenants yet.</div>
+            </template>
+            <c-repm-paginator
+                page-number={pageNumber}
+                total-pages={totalPages}
+                total-count={totalCount}
+                disabled={loading}
+                onprevious={handlePrevious}
+                onnext={handleNext}
+            ></c-repm-paginator>
+        </div>
+    </lightning-card>
+</template>

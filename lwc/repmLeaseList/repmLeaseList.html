@@ -1,0 +1,82 @@
+<template>
+    <lightning-card title="Lease Agreements" icon-name="standard:contract">
+        <lightning-button slot="actions" label="New Agreement" variant="brand" onclick={handleCreate}></lightning-button>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-m-bottom_small slds-text-body_small">Each agreement belongs to one property. Open a record to download or email the PDF.</p>
+            <template if:true={creating}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-record-picker label="Property" object-api-name="Property__c" value={propertyId} required onchange={handleProperty}></lightning-record-picker>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-record-picker label="Tenant" object-api-name="Tenant__c" value={tenantId} required onchange={handleTenant}></lightning-record-picker>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input label="Agreed Monthly Rent" type="number" value={rent} required min="0.01" step="0.01" onchange={handleRent}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input data-field="startDate" label="Start Date" type="date" value={startDate} required onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <lightning-input data-field="endDate" label="End Date" type="date" value={endDate} required onchange={handleChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea data-field="terms" label="Terms" value={terms} onchange={handleChange}></lightning-textarea>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-button label="Save Agreement" variant="brand" onclick={handleSave} disabled={saving}></lightning-button>
+                        <lightning-button class="slds-m-left_x-small" label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                </div>
+            </template>
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading lease agreements" size="small"></lightning-spinner>
+            </template>
+            <template if:true={hasRecords}>
+                <div class="slds-scrollable_x">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Lease agreements">
+                        <thead>
+                            <tr>
+                                <th scope="col">Agreement</th>
+                                <th scope="col">Property</th>
+                                <th scope="col">Tenant</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Rent</th>
+                                <th scope="col">Start</th>
+                                <th scope="col">End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={records} for:item="row">
+                                <tr key={row.id}>
+                                    <th scope="row">
+                                        <button class="slds-button slds-button_reset" data-id={row.id} onclick={handleView}>{row.name}</button>
+                                    </th>
+                                    <td>{row.propertyName}</td>
+                                    <td>{row.tenantName}</td>
+                                    <td>{row.status}</td>
+                                    <td><lightning-formatted-number value={row.rent} format-style="currency"></lightning-formatted-number></td>
+                                    <td>{row.startDate}</td>
+                                    <td>{row.endDate}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template if:false={hasRecords}>
+                <div class="slds-align_absolute-center slds-m-vertical_large slds-text-color_weak">No lease agreements yet.</div>
+            </template>
+            <c-repm-paginator
+                page-number={pageNumber}
+                total-pages={totalPages}
+                total-count={totalCount}
+                disabled={loading}
+                onprevious={handlePrevious}
+                onnext={handleNext}
+            ></c-repm-paginator>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,72 @@
+<template>
+    <lightning-card title="Property Management Dashboard" icon-name="standard:dashboard">
+        <lightning-button slot="actions" label="Refresh" onclick={handleRefresh}></lightning-button>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading dashboard" size="small"></lightning-spinner>
+            </template>
+            <div class="slds-grid slds-wrap slds-gutters_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <article class="slds-box metric">
+                        <h2 class="slds-text-title_caps">Occupancy rate</h2>
+                        <p class="metric-value">{occupancyLabel}</p>
+                        <p class="slds-text-body_small">{occupancyDetail}</p>
+                        <div class="bar slds-m-top_small" aria-hidden="true"><span style={occupancyStyle}></span></div>
+                    </article>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <article class="slds-box metric">
+                        <h2 class="slds-text-title_caps">Leases expiring in 30 days</h2>
+                        <p class="metric-value">{expiringCount}</p>
+                        <p class="slds-text-body_small">Agreements with an end date from today through the next 30 days.</p>
+                    </article>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <article class="slds-box metric">
+                        <h2 class="slds-text-title_caps">Maintenance by status</h2>
+                        <template for:each={statusRows} for:item="row">
+                            <div key={row.status} class="slds-m-top_x-small">
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <span>{row.status}</span>
+                                    <span>{row.count} · {row.percentLabel}</span>
+                                </div>
+                                <div class="bar" aria-hidden="true"><span style={row.barStyle}></span></div>
+                            </div>
+                        </template>
+                    </article>
+                </div>
+            </div>
+
+            <h2 class="slds-text-heading_small slds-m-top_large slds-m-bottom_small">Lease agreements expiring in the next 30 days</h2>
+            <template if:true={hasExpiring}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Expiring lease agreements">
+                    <thead>
+                        <tr>
+                            <th scope="col">Agreement</th>
+                            <th scope="col">Property</th>
+                            <th scope="col">Tenant</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">Rent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={expiringLeases} for:item="row">
+                            <tr key={row.id}>
+                                <th scope="row">
+                                    <button class="slds-button slds-button_reset" data-id={row.id} onclick={handleOpen}>{row.name}</button>
+                                </th>
+                                <td>{row.propertyName}</td>
+                                <td>{row.tenantName}</td>
+                                <td>{row.endDate}</td>
+                                <td><lightning-formatted-number value={row.rent} format-style="currency"></lightning-formatted-number></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={hasExpiring}>
+                <p class="slds-text-color_weak">No lease agreements expire in the next 30 days.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

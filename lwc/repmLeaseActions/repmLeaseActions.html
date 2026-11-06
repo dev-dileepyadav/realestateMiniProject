@@ -1,0 +1,20 @@
+<template>
+    <lightning-card title="Lease PDF" icon-name="doctype:pdf">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template if:true={error}>
+                <p class="slds-text-color_error slds-m-bottom_small">{error}</p>
+            </template>
+            <p class="slds-m-bottom_small">Download the agreement or email the PDF to {tenantEmail}.</p>
+            <p class="slds-text-body_small slds-m-bottom_small">PDF files are produced with jsPDF in the browser, then stored on this record when emailed.</p>
+            <lightning-button label="Download PDF" icon-name="utility:download" onclick={handleDownload} disabled={disableActions}></lightning-button>
+            <lightning-button
+                class="slds-m-left_x-small"
+                label="Send PDF to Tenant"
+                variant="brand"
+                icon-name="utility:email"
+                onclick={handleSend}
+                disabled={disableActions}
+            ></lightning-button>
+        </div>
+    </lightning-card>
+</template>

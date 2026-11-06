@@ -1,0 +1,66 @@
+<template>
+    <lightning-card title="New Property" icon-name="custom:custom85">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <div class="slds-grid slds-wrap slds-gutters_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="name" label="Property Name" value={name} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="address" label="Address" value={address} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="city" label="City" value={city} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="state" label="State" value={state} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="postalCode" label="Postal Code" value={postalCode} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input data-field="country" label="Country" value={country} required onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox data-field="type" label="Type" value={type} options={typeOptions} required onchange={handleChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox
+                        data-field="furnishingStatus"
+                        label="Furnishing Status"
+                        value={furnishingStatus}
+                        options={furnishingOptions}
+                        onchange={handleChange}
+                    ></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox data-field="status" label="Status" value={status} options={statusOptions} required onchange={handleChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input label="Rent" type="number" value={rent} required step="0.01" min="0.01" onchange={handleRent}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-textarea data-field="description" label="Description" value={description} required onchange={handleChange}></lightning-textarea>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input type="file" label="Property Images" accept="image/*" multiple onchange={handleFiles}></lightning-input>
+                    <p class="slds-text-body_small slds-m-top_xx-small">At least one image is required. You can attach up to 10 images.</p>
+                    <template if:true={imageError}>
+                        <p class="slds-text-color_error slds-m-top_xx-small">{imageError}</p>
+                    </template>
+                    <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-top_small">
+                        <template for:each={previews} for:item="preview">
+                            <figure key={preview.name} class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                <img class="preview" src={preview.url} alt={preview.name} />
+                                <figcaption class="slds-text-body_small slds-truncate">{preview.name}</figcaption>
+                            </figure>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button data-id="save" label="Save Property" variant="brand" onclick={handleSave} disabled={disableSave}></lightning-button>
+                <lightning-button class="slds-m-left_x-small" label="Cancel" onclick={handleCancel} disabled={disableSave}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

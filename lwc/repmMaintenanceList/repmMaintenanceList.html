@@ -1,0 +1,69 @@
+<template>
+    <lightning-card title="Maintenance Requests" icon-name="standard:work_order">
+        <lightning-button slot="actions" label="New Request" variant="brand" onclick={handleCreate}></lightning-button>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-m-bottom_small slds-text-body_small">
+                New requests are assigned to the vendor with the fewest open and in-progress jobs. Add vendors on the Vendors tab first.
+            </p>
+            <template if:true={creating}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-record-picker label="Property" object-api-name="Property__c" value={propertyId} required onchange={handleProperty}></lightning-record-picker>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-combobox label="Status" value={status} options={statusOptions} onchange={handleStatus}></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea label="Description" value={description} onchange={handleDescription}></lightning-textarea>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-button label="Save Request" variant="brand" onclick={handleSave} disabled={saving}></lightning-button>
+                        <lightning-button class="slds-m-left_x-small" label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                </div>
+            </template>
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading maintenance requests" size="small"></lightning-spinner>
+            </template>
+            <template if:true={hasRecords}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Maintenance requests">
+                    <thead>
+                        <tr>
+                            <th scope="col">Request</th>
+                            <th scope="col">Property</th>
+                            <th scope="col">Vendor</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={records} for:item="row">
+                            <tr key={row.id}>
+                                <th scope="row">
+                                    <button class="slds-button slds-button_reset" data-id={row.id} onclick={handleView}>{row.name}</button>
+                                </th>
+                                <td>{row.propertyName}</td>
+                                <td>{row.vendorName}</td>
+                                <td>{row.status}</td>
+                                <td>{row.description}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={hasRecords}>
+                <div class="slds-align_absolute-center slds-m-vertical_large slds-text-color_weak">No maintenance requests yet.</div>
+            </template>
+            <c-repm-paginator
+                page-number={pageNumber}
+                total-pages={totalPages}
+                total-count={totalCount}
+                disabled={loading}
+                onprevious={handlePrevious}
+                onnext={handleNext}
+            ></c-repm-paginator>
+        </div>
+    </lightning-card>
+</template>

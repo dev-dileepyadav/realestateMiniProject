@@ -1,0 +1,105 @@
+<template>
+    <template if:true={creating}>
+        <c-repm-property-create oncreated={handleCreated} oncancel={handleCancel}></c-repm-property-create>
+    </template>
+    <template if:false={creating}>
+        <lightning-card title="Properties" icon-name="custom:custom85">
+            <lightning-button slot="actions" label="New Property" variant="brand" onclick={handleCreate}></lightning-button>
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <p class="slds-m-bottom_small slds-text-body_small">
+                    Server-side list of 25 properties per page. Distance uses your browser location and each property's geocoded
+                    coordinates.
+                </p>
+                <div class="slds-grid slds-wrap slds-gutters_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6">
+                        <lightning-input type="number" label="Minimum rent" value={minRent} onchange={handleMinRent} step="0.01"></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6">
+                        <lightning-input type="number" label="Maximum rent" value={maxRent} onchange={handleMaxRent} step="0.01"></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6">
+                        <lightning-combobox label="Availability" value={status} options={statusOptions} onchange={handleStatus}></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6">
+                        <lightning-combobox
+                            label="Furnishing"
+                            value={furnishingStatus}
+                            options={furnishingOptions}
+                            onchange={handleFurnishing}
+                        ></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6">
+                        <lightning-input
+                            type="number"
+                            label="Nearby distance (km)"
+                            value={distanceKm}
+                            onchange={handleDistance}
+                            min="0"
+                            step="0.1"
+                            field-level-help="Only geocoded properties inside this distance from your location are returned."
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-6 slds-grid slds-grid_vertical-align-end">
+                        <lightning-button label="Use my location" icon-name="utility:checkin" onclick={handleLocation}></lightning-button>
+                    </div>
+                </div>
+                <div class="slds-m-top_small slds-grid slds-grid_vertical-align-center">
+                    <lightning-button label="Apply" variant="brand" onclick={handleApply}></lightning-button>
+                    <lightning-button class="slds-m-left_x-small" label="Clear" onclick={handleClear}></lightning-button>
+                    <span class="slds-m-left_small slds-text-body_small">{locationLabel}</span>
+                </div>
+
+                <template if:true={loading}>
+                    <lightning-spinner alternative-text="Loading properties" size="small"></lightning-spinner>
+                </template>
+                <template if:true={hasRecords}>
+                    <div class="slds-scrollable_x slds-m-top_medium">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Properties">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col">Property</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Furnishing</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Rent</th>
+                                    <th scope="col">Distance (km)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={rows} for:item="row">
+                                    <tr key={row.id}>
+                                        <th scope="row">
+                                            <button class="slds-button slds-button_reset" data-id={row.id} onclick={handleView}>{row.name}</button>
+                                        </th>
+                                        <td>{row.location}</td>
+                                        <td>{row.propertyType}</td>
+                                        <td>{row.furnishingStatus}</td>
+                                        <td><span class={row.statusClass}>{row.status}</span></td>
+                                        <td>
+                                            <lightning-formatted-number value={row.rent} format-style="currency"></lightning-formatted-number>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-number value={row.distanceKm} maximum-fraction-digits="2"></lightning-formatted-number>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+                <template if:false={hasRecords}>
+                    <div class="slds-align_absolute-center slds-m-vertical_large slds-text-color_weak">No properties match these filters.</div>
+                </template>
+                <c-repm-paginator
+                    page-number={pageNumber}
+                    total-pages={totalPages}
+                    total-count={totalCount}
+                    disabled={loading}
+                    onprevious={handlePrevious}
+                    onnext={handleNext}
+                ></c-repm-paginator>
+            </div>
+        </lightning-card>
+    </template>
+</template>

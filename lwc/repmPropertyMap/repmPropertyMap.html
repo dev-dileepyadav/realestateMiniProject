@@ -1,0 +1,25 @@
+<template>
+    <lightning-card title="Property Location" icon-name="utility:checkin">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-m-bottom_small">{address}</p>
+            <template if:true={error}>
+                <p class="slds-text-color_error slds-m-bottom_small">{error}</p>
+            </template>
+            <template if:true={hasLocation}>
+                <div class="map-frame">
+                    <lightning-map map-markers={mapMarkers} zoom-level="15"></lightning-map>
+                </div>
+            </template>
+            <template if:false={hasLocation}>
+                <p class="slds-m-bottom_small">This address has not been placed on the map yet.</p>
+            </template>
+            <lightning-button
+                class="slds-m-top_small"
+                label="Geocode Address"
+                variant="brand"
+                onclick={handleGeocode}
+                disabled={geocoding}
+            ></lightning-button>
+        </div>
+    </lightning-card>
+</template>
